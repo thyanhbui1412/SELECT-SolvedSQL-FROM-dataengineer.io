@@ -6,7 +6,7 @@ FROM playground.drinks
 union all
 SELECT country, 'wine' as preferred_drink, wine_servings as servings
 FROM playground.drinks),
-ranked_preference as (select country, preferred_drink, row_number() over(partition by country order by servings ) as ranked
+ranked_preference as (select country, preferred_drink, row_number() over(partition by country order by servings desc ) as ranked
 from unpivot_tbl)
 
 select country, preferred_drink 
