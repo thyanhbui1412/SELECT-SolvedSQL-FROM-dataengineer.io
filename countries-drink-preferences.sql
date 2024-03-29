@@ -1,15 +1,18 @@
-with unpivot_tbl as  (SELECT country, 'beer' as preferred_drink, beer_servings as servings
-FROM playground.drinks
-union all
-SELECT country, 'spirit' as preferred_drink, spirit_servings as servings
-FROM playground.drinks
-union all
-SELECT country, 'wine' as preferred_drink, wine_servings as servings
-FROM playground.drinks),
-ranked_preference as (select country, preferred_drink, row_number() over(partition by country order by servings desc ) as ranked
-from unpivot_tbl)
+WITH unpivot_tbl AS (SELECT country, 'Beer' AS preferred_drink, beer_servings AS servings
+                     FROM playground.drinks
+                     UNION ALL
+                     SELECT country, 'Spirit' AS preferred_drink, spirit_servings AS servings
+                     FROM playground.drinks
+                     UNION ALL
+                     SELECT country, 'Wine' AS preferred_drink, wine_servings AS servings
+                     FROM playground.drinks),
+     ranked_preference AS (SELECT country,
+                                  preferred_drink,
+                                  ROW_NUMBER() OVER (PARTITION BY country ORDER BY servings DESC ) AS ranked
+                           FROM unpivot_tbl)
 
-select country, preferred_drink 
-from ranked_preference
-where  ranked =1  and preferred_drink <> 'beer'
-order by country
+SELECT country, preferred_drink
+FROM ranked_preference
+WHERE ranked = 1
+  AND preferred_drink <> 'Beer'
+ORDER BY country
