@@ -14,3 +14,4 @@ select
     helpful_votes
   from ranked_tbl 
   where rank_num = 1
+  order by product_id 
